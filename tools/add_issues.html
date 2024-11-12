@@ -114,7 +114,7 @@
             display: flex;
             flex-wrap: wrap;
             gap: 10px;
-            margin-top: 30px;
+            margin-top: 15px;
         }
 
         .label {
@@ -172,8 +172,32 @@
             white-space: nowrap;
         }
 
-        button[type="submit"] {
-            margin-top: 30px;
+        #userInfoContainer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #2f3542;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        #userInfo {
+            background-color: #2f3542;
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        #resetInfo {
+            background-color: #ff4757;
+            margin: 0;
+            padding: 8px 12px;
+            font-size: 14px;
+        }
+
+        #resetInfo:hover {
+            background-color: #ff6b81;
         }
     </style>
 </head>
@@ -181,6 +205,10 @@
 <body>
     <div class="container">
         <h1 id="repoTitle">GitHub Issue Creator</h1>
+        <div id="userInfoContainer">
+            <div id="userInfo"></div>
+            <button id="resetInfo">Reset</button>
+        </div>
         <form id="issueForm">
             <div id="issuesContainer"></div>
             <button type="button" id="addIssue">+</button>
@@ -201,6 +229,15 @@
         let labels = [];
         let issues = [{ title: '', body: '', labels: [] }];
 
+        function updateUserInfo() {
+            const userInfoElement = document.getElementById('userInfo');
+            if (owner && repo) {
+                userInfoElement.innerHTML = `Current User: ${owner}<br>Current Repo: ${repo}`;
+            } else {
+                userInfoElement.innerHTML = 'User and Repo info not set';
+            }
+        }
+
         function promptForInfo() {
             if (!owner || !repo || !token) {
                 owner = localStorage.getItem('githubOwner') || prompt('Please enter the GitHub username:');
@@ -212,9 +249,21 @@
                     localStorage.setItem('githubRepo', repo);
                     localStorage.setItem('githubToken', token);
                     document.getElementById('repoTitle').textContent = `GitHub Issue Creator for ${repo}`;
+                    updateUserInfo();
                     fetchLabels();
                 }
             }
+        }
+
+        function resetInfo() {
+            localStorage.removeItem('githubOwner');
+            localStorage.removeItem('githubRepo');
+            owner = repo = null;
+            updateUserInfo();
+            document.getElementById('repoTitle').textContent = 'GitHub Issue Creator';
+            labels = [];
+            updateLabels();
+            promptForInfo();
         }
 
         async function fetchLabels() {
@@ -381,8 +430,11 @@
             }
         });
 
+        document.getElementById('resetInfo').addEventListener('click', resetInfo);
+
         // Initial setup
         promptForInfo();
+        updateUserInfo();
         if (owner && repo && token) {
             fetchLabels();
         }
