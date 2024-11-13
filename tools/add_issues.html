@@ -150,9 +150,62 @@
             margin-top: 15px;
         }
 
-        .issue-labels label {
-            display: inline-block;
-            margin-right: 15px;
+        .custom-checkbox-group {
+            display: flex;
+            flex-flow: row wrap;
+            gap: 0 20px;
+        }
+
+        .custom-checkbox {
+            display: flex;
+            align-items: center;
+            position: relative;
+            /* padding-left: 35px; */
+            gap: 12px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            font-size: 14px;
+            user-select: none;
+        }
+
+        .checkmark {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 19px;
+            width: 19px;
+            background-color: #2f3542;
+            border: 2px solid #57606f;
+            border-radius: 4px;
+        }
+
+        .custom-checkbox:hover input~.checkmark {
+            background-color: #3f4656;
+        }
+
+        .custom-checkbox input:checked~.checkmark {
+            background-color: #5352ed;
+            border-color: #5352ed;
+        }
+
+        .checkmark:after {
+            content: "";
+            position: absolute;
+            display: none;
+        }
+
+        .custom-checkbox input:checked~.checkmark:after {
+            display: block;
+        }
+
+        .custom-checkbox .checkmark:after {
+            left: 6px;
+            top: 2px;
+            width: 5px;
+            height: 10px;
+            border: solid white;
+            border-width: 0 2px 2px 0;
+            transform: rotate(45deg);
         }
 
         #newLabelContainer {
@@ -297,7 +350,7 @@
                 <label for="body-${issueIndex}">Issue Description:</label>
                 <textarea id="body-${issueIndex}" class="body" rows="5" required></textarea>
                 <label>Select Labels:</label>
-                <div class="issue-labels"></div>
+                <div class="issue-labels custom-checkbox-group"></div>
             `;
             document.getElementById('issuesContainer').appendChild(container);
 
@@ -318,10 +371,12 @@
                 container.innerHTML = '';
                 labels.forEach(label => {
                     const labelElement = document.createElement('label');
+                    labelElement.className = 'custom-checkbox';
                     labelElement.innerHTML = `
                         <input type="checkbox" value="${label.name}" 
                         ${issues[issueIndex] && issues[issueIndex].labels.includes(label.name) ? 'checked' : ''}>
-                        ${label.name}
+                        <span class="checkmark"></span>
+                        <span class="label-text">${label.name}</span>
                     `;
                     container.appendChild(labelElement);
 
@@ -338,7 +393,7 @@
             labels.forEach(label => {
                 const labelElement = document.createElement('span');
                 labelElement.className = 'label';
-                labelElement.style.backgroundColor = '#3498db'; // 使用固定的颜色
+                labelElement.style.backgroundColor = '#3498db';
                 labelElement.textContent = label.name;
                 labelsContainer.appendChild(labelElement);
             });
@@ -411,12 +466,14 @@
                 const failedIssues = results.filter(data => !data.html_url);
 
                 let resultHTML = '';
+                // 添加成功提示和刷新页面的功能
                 if (successfulIssues.length > 0) {
-                    resultHTML += '<h3>Successfully created issues:</h3>';
-                    resultHTML += successfulIssues.map(data =>
-                        `<p><a href="${data.html_url}" target="_blank">${data.title}</a></p>`
-                    ).join('');
+                    alert(`Successfully created ${successfulIssues.length} issue(s). The page will now refresh.`);
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1000); // 1秒后刷新页面
                 }
+
                 if (failedIssues.length > 0) {
                     resultHTML += '<h3>Failed to create issues:</h3>';
                     resultHTML += failedIssues.map(data =>
