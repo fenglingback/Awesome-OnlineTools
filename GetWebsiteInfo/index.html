@@ -181,17 +181,17 @@
                         <div class="result-field">
                             <strong>标题:</strong>
                             <span>${data.title || '未知'}</span>
-                            <button class="copy-btn" onclick="copyToClipboard('${escapeHtml(data.title.trim() || '')}', this)">复制</button>
+                            <button class="copy-btn" onclick="copyToClipboard('${data.title ? escapeHtml(data.title.trim()) : ''}', this)">复制</button>
                         </div>
                         <div class="result-field">
                             <strong>描述:</strong>
                             <span>${data.description || '未知'}</span>
-                            <button class="copy-btn" onclick="copyToClipboard('${escapeHtml(data.description.trim() || '')}', this)">复制</button>
+                            <button class="copy-btn" onclick="copyToClipboard('${data.description ? escapeHtml(data.description.trim()) : ''}', this)">复制</button>
                         </div>
                         <div class="result-field">
                             <strong>关键词:</strong>
                             <span>${data.keywords || '未知'}</span>
-                            <button class="copy-btn" onclick="copyToClipboard('${escapeHtml(data.keywords.trim() || '')}', this)">复制</button>
+                            <button class="copy-btn" onclick="copyToClipboard('${data.keywords ? escapeHtml(data.keywords.trim()) : ''}', this)">复制</button>
                         </div>
                     `;
                     resultsDiv.appendChild(resultElement);
