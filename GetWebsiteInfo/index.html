@@ -206,7 +206,8 @@
         }
 
         function copyToClipboard(text, button) {
-            navigator.clipboard.writeText(text).then(() => {
+            const textWithoutNewlines = text.replace(/\n/g, '');
+            navigator.clipboard.writeText(textWithoutNewlines).then(() => {
                 button.classList.add('copied');
                 button.innerText = '复制成功';
                 setTimeout(() => {
