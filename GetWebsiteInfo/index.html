@@ -176,22 +176,22 @@
                         <div class="result-field">
                             <strong>网址:</strong>
                             <span>${url}</span>
-                            <button class="copy-btn" onclick="copyToClipboard('${escapeHtml(url.trim())}', this)">复制</button>
+                            <button class="copy-btn" onclick="copyToClipboard('${escapeHtml(url)}', this)">复制</button>
                         </div>
                         <div class="result-field">
                             <strong>标题:</strong>
                             <span>${data.title || '未知'}</span>
-                            <button class="copy-btn" onclick="copyToClipboard('${data.title ? escapeHtml(data.title.trim()) : ''}', this)">复制</button>
+                            <button class="copy-btn" onclick="copyToClipboard('${data.title ? escapeHtml(data.title) : ''}', this)">复制</button>
                         </div>
                         <div class="result-field">
                             <strong>描述:</strong>
                             <span>${data.description || '未知'}</span>
-                            <button class="copy-btn" onclick="copyToClipboard('${data.description ? escapeHtml(data.description.trim()) : ''}', this)">复制</button>
+                            <button class="copy-btn" onclick="copyToClipboard('${data.description ? escapeHtml(data.description) : ''}', this)">复制</button>
                         </div>
                         <div class="result-field">
                             <strong>关键词:</strong>
                             <span>${data.keywords || '未知'}</span>
-                            <button class="copy-btn" onclick="copyToClipboard('${data.keywords ? escapeHtml(data.keywords.trim()) : ''}', this)">复制</button>
+                            <button class="copy-btn" onclick="copyToClipboard('${data.keywords ? escapeHtml(data.keywords) : ''}', this)">复制</button>
                         </div>
                     `;
                     resultsDiv.appendChild(resultElement);
@@ -206,7 +206,7 @@
         }
 
         function copyToClipboard(text, button) {
-            const textWithoutNewlines = text.replace(/\n/g, '');
+            const textWithoutNewlines = text.replace(/(\r\n|\n|\r)/g, "");
             navigator.clipboard.writeText(textWithoutNewlines).then(() => {
                 button.classList.add('copied');
                 button.innerText = '复制成功';
@@ -226,7 +226,8 @@
                 .replace(/</g, "&lt;")
                 .replace(/>/g, "&gt;")
                 .replace(/"/g, "&quot;")
-                .replace(/'/g, "&#039;");
+                .replace(/'/g, "&#039;")
+                .replace(/(\r\n|\n|\r)/g, "");
         }
     </script>
 </body>
